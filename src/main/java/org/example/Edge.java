@@ -16,5 +16,9 @@ public class Edge {
         this.v2 = v2;
         this.weight = weight;
     }
+    @Override
+    public String toString() {
+        return ("(" +v1 + " , " + v2 + ", " + weight+")");
+    }
 }
 

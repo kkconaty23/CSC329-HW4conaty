@@ -232,7 +232,12 @@ public class Main {
 
         for (int i = 0; i < numVertices; i++) {
             int vertex = g.vertices.get(i);
-            String distance = (dist[i] == Integer.MAX_VALUE) ? "∞" : String.valueOf(dist[i]);
+            String distance;
+            if (dist[i] == Integer.MAX_VALUE) {// if not updated leave empty
+                distance = "";
+            } else {
+                distance = String.valueOf(dist[i]);//if updated show result
+            }
             System.out.println(vertex + "               " + distance + "            " + previous[i]);
         }
     }

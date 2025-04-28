@@ -5,12 +5,20 @@ import java.util.List;
 
 import static org.example.MyGraph.calculateConnectedComponents;
 
+/**
+ * Main method used for running and testing the graph
+ */
 public class Main {
+    /**
+     * Main runnable method
+     * @param args
+     */
     public static void main(String[] args) {
-        MyGraph ccGraph = new MyGraph();
-        for (int i = 0; i < 10; i++) {
+        MyGraph ccGraph = new MyGraph();//connected components graph
+        for (int i = 0; i < 10; i++) {//add all vertices to the graph
             ccGraph.addVertex(i);
         }
+        //add all graph edges
         ccGraph.addEdge(0, 2, 13);
         ccGraph.addEdge(0, 1, 2);
         ccGraph.addEdge(3, 5, 1);
@@ -18,15 +26,17 @@ public class Main {
         ccGraph.addEdge(6, 8, 1);
         ccGraph.addEdge(6, 9, 4);
 
+        //new array to store output of calculateConnectedComponents() method
         int[] components = calculateConnectedComponents(ccGraph);
 
-        // Print the components
+        //connected components array printing format
         System.out.println("Connected Components:");
         System.out.println("Vertex " + "   Component #");
         for (int i = 0; i < components.length; i++) {
 
             System.out.println(ccGraph.vertices.get(i) + "        " + components[i]);
         }
+        //second graph
             MyGraph g = new MyGraph();
             g.addEdge(0, 2, 13);
             g.addEdge(0, 1, 2);
@@ -62,6 +72,12 @@ public class Main {
 
     }
 
+    /**
+     * method getting the min frontier edge showing which adjacent vertex has not been visited yet
+     * @param g
+     * @param visited
+     * @return
+     */
     public static Edge getMinFrontierEdge(MyGraph g, boolean[] visited){
         Edge minEdge = new Edge(0,0,Integer.MAX_VALUE);
 
@@ -84,40 +100,55 @@ public class Main {
 
         return minEdge;
     }
+
+    /**
+     * Minnumim spanning tree method to showing where all vertices are connected and the minimum
+     * weight of all edges in the subgraph is minimized
+     * and there are no cycles.
+     * @param g
+     * @param startingVertex
+     * @return
+     */
     public static MyGraph minimumSpanningTree(MyGraph g, int startingVertex){
+        boolean[] visited = new boolean[g.vertices.size()];//track visited vertices default false
+        MyGraph mst = new MyGraph();//new graph for MST
 
-        boolean[] visited = new boolean[g.vertices.size()];
-        MyGraph mst = new MyGraph();
 
-
-        for (int v : g.vertices) {
-            mst.addVertex(v);
+        for (int i = 0; i < g.vertices.size(); i++) {//add all vertices to the graph
+            mst.addVertex(i);
         }
 
 
-        int startIndex = g.vertices.indexOf(startingVertex);
-        visited[startIndex] = true;
+        int startIndex = g.vertices.indexOf(startingVertex);//input starting vertx is the start point (0)
+        visited[startIndex] = true;//set start to true
 
 
         while (true) {
             // find the lowest frontier edge
-            Edge e = getMinFrontierEdge(g, visited);
-            if (e.weight == Integer.MAX_VALUE) break;// no more edges
+            Edge min = getMinFrontierEdge(g, visited);
+            if (min.weight == Integer.MAX_VALUE) break;// no more edges
 
             // mark its endpoints visited
-            int uIndex = g.vertices.indexOf(e.v1);
-            int vIndex = g.vertices.indexOf(e.v2);
-            visited[uIndex] = true;
-            visited[vIndex] = true;
+            int sourceIndex = g.vertices.indexOf(min.v1);
+            int destIndex = g.vertices.indexOf(min.v2);
+            visited[sourceIndex] = true;
+            visited[destIndex] = true;
 
             // add that edge into our MST
-            mst.addEdge(e.v1, e.v2, e.weight);
+            mst.addEdge(min.v1, min.v2, min.weight);
         }
 
         return mst;
     }
 
-
+    /**
+     * method GetMinDistVertex searches the list of unvisited vertices for
+     * the one that is closest to the source
+     * @param g
+     * @param unvisitedList
+     * @param dist
+     * @return
+     */
     public static int getMinDistVertex(MyGraph g, List<Integer> unvisitedList, int[] dist) {
 
         if (unvisitedList.isEmpty()) {
@@ -127,10 +158,10 @@ public class Main {
         int minNeighborVertex = unvisitedList.get(0);
         int minNeighborDist = dist[g.vertices.indexOf(minNeighborVertex)];
 
-        // Iterate through all vertices in unvisited list
+        //go through all vertices in unvisited list
         for (int v : unvisitedList) {
             int vIndex = g.vertices.indexOf(v);
-            // If we find a vertex with smaller distance, update our variables
+            // If  smaller distance found, update our variables
             if (dist[vIndex] < minNeighborDist) {
                 minNeighborDist = dist[vIndex];
                 minNeighborVertex = v;
@@ -140,48 +171,53 @@ public class Main {
         return minNeighborVertex;
     }
 
+    /**
+     *method to find the shortest path between vertices in a graph
+     * @param g
+     * @param startingVertex
+     */
     public static void shortestPath(MyGraph g, int startingVertex) {
         int numVertices = g.vertices.size();
 
-        // Initialize arrays
+        //needed arrays
         int[] dist = new int[numVertices];
         int[] previous = new int[numVertices];
         boolean[] visited = new boolean[numVertices];
         List<Integer> unvisitedList = new ArrayList<>();
 
-        // Set all vertex distances to max value (infinity)
+        // Set all vertex distances to max value, all previous to -1, all visited to F,
         for (int i = 0; i < numVertices; i++) {
             dist[i] = Integer.MAX_VALUE;
             previous[i] = -1;
             visited[i] = false;
-            unvisitedList.add(g.vertices.get(i)); // Add actual vertex values to unvisitedList
+            unvisitedList.add(g.vertices.get(i)); //add vertex values to unvisitedList
         }
 
-        // Set starting vertex distance to 0
+        //starting vertex distance = 0
         int startIndex = g.vertices.indexOf(startingVertex);
         dist[startIndex] = 0;
 
-        // Main algorithm loop
+        //loop to process unvisited neighbors
         while (!unvisitedList.isEmpty()) {
-            // Get vertex with min distance
+            //get min distance
             int currV = getMinDistVertex(g, unvisitedList, dist);
 
-            // Remove current vertex from unvisited list and mark as visited
+            //remove current vertex from unvisited list and mark as visited
             unvisitedList.remove(Integer.valueOf(currV));
             int currVIndex = g.vertices.indexOf(currV);
             visited[currVIndex] = true;
 
-            // Check all unvisited neighbors of currV
+            //check unvisited neighbors of current
             List<Edge> edges = g.adjacencyList.get(currV);
             for (Edge edge : edges) {
                 int neighborVertex = edge.v2;
                 int neighborIndex = g.vertices.indexOf(neighborVertex);
 
                 if (!visited[neighborIndex]) {
-                    // Calculate possible distance through current vertex
+                    //calculate distance
                     int possibleDist = dist[currVIndex] + edge.weight;
 
-                    // If we found a shorter path, update distance and previous
+                    //ifshorter path found, update distance and previous
                     if (possibleDist < dist[neighborIndex]) {
                         dist[neighborIndex] = possibleDist;
                         previous[neighborIndex] = currV;
@@ -190,14 +226,14 @@ public class Main {
             }
         }
 
-        // Print results
-        System.out.println("Shortest paths from vertex " + startingVertex + ":");
-        System.out.println("Vertex\tDistance\tPrevious");
+
+
+        System.out.println("Vertex      Distance       Previous");
 
         for (int i = 0; i < numVertices; i++) {
             int vertex = g.vertices.get(i);
             String distance = (dist[i] == Integer.MAX_VALUE) ? "∞" : String.valueOf(dist[i]);
-            System.out.println(vertex + "\t" + distance + "\t\t" + previous[i]);
+            System.out.println(vertex + "               " + distance + "            " + previous[i]);
         }
     }
 

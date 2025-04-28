@@ -14,32 +14,30 @@ public class MyGraph {
      * graph constructor creates an instance of the
      * vertex list and an instance of the adjacency list map
      */
-    public MyGraph() {
+    public MyGraph(){
         this.vertices = new ArrayList<>();
         this.adjacencyList = new HashMap<>();
     }
 
     /**
      * add vertex method that can add a vertex onto the graph
-     *
      * @param v
      */
     void addVertex(int v) {
         if (!vertices.contains(v)) {
             vertices.add(v);
-            adjacencyList.put(v, new ArrayList<>()); // Empty adjacency list
+            adjacencyList.put(v, new ArrayList<>()); //empty adjacency list
         }
     }
 
     /**
      * add edge method that adds a new edge to the adjacency lists for both
      * v1 and v2.
-     *
      * @param v1
      * @param v2
      * @param weight
      */
-    void addEdge(int v1, int v2, int weight) {
+    void addEdge(int v1, int v2, int weight){
         if (!adjacencyList.containsKey(v1)) addVertex(v1);
         if (!adjacencyList.containsKey(v2)) addVertex(v2);
 
@@ -53,20 +51,19 @@ public class MyGraph {
     /**
      * method to print the created graph
      */
-    void showGraph() {
-        for (Map.Entry<Integer, List<Edge>> entry : adjacencyList.entrySet()) {
-
+    void showGraph(){
+        for(Map.Entry<Integer, List<Edge>> entry: adjacencyList.entrySet()){
             System.out.println(entry.getKey() + ", " + entry.getValue());
         }
     }
 
     /**
-     * method implemented to calculate the number of connected components
-     *
+     * method to show the connected components of a graph return an array showing what vertex
+     * belongs to which component
      * @param g
-     * @returns an array of the vertex # and which component it belongs to
+     * @return
      */
-    public static int[] calculateConnectedComponents(MyGraph g) {
+    public static int[] calculateConnectedComponents(MyGraph g){
 
         int numVertices = g.vertices.size();
         int[] componentMap = new int[numVertices]; // component number for each vertex (indexed by vertex index in g.vertices)
@@ -76,11 +73,11 @@ public class MyGraph {
         for (int i = 0; i < numVertices; i++) {
             int currVertex = g.vertices.get(i);
             if (!visited[i]) {
-                numComponents++;
-                Queue<Integer> bfsQueue = new LinkedList<>();
-                bfsQueue.add(currVertex);
+                numComponents++;//increase component count
+                Queue<Integer> bfsQueue = new LinkedList<>();//make the bfs queue
+                bfsQueue.add(currVertex);//add current index to the queue
 
-                while (!bfsQueue.isEmpty()) {
+                while (!bfsQueue.isEmpty()) {//keep loooping til queue is empty
                     int compV = bfsQueue.remove();
                     int index = g.vertices.indexOf(compV);
                     if (visited[index]) continue;
@@ -102,10 +99,4 @@ public class MyGraph {
         return componentMap;
     }
 
-
 }
-
-
-
-
-

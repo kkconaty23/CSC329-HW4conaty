@@ -16,6 +16,11 @@ public class Edge {
         this.v2 = v2;
         this.weight = weight;
     }
+
+    /**
+     * to string method to print out the edges of a graph
+     * @return
+     */
     @Override
     public String toString() {
         return ("(" +v1 + " , " + v2 + ", " + weight+")");

@@ -55,7 +55,7 @@ public class MyGraph {
      */
     void showGraph() {
         for (Map.Entry<Integer, List<Edge>> entry : adjacencyList.entrySet()) {
-            // Print vertex and its edges
+
             System.out.println(entry.getKey() + ", " + entry.getValue());
         }
     }

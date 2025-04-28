@@ -119,9 +119,9 @@ public class Main {
 
 
     public static int getMinDistVertex(MyGraph g, List<Integer> unvisitedList, int[] dist) {
-        // Initialize with the first element in unvisited list
+
         if (unvisitedList.isEmpty()) {
-            return -1; // Return -1 if the unvisited list is empty
+            return -1; //if the unvisited list is empty
         }
 
         int minNeighborVertex = unvisitedList.get(0);
